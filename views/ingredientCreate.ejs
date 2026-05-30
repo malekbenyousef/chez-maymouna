@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Chez Maymouna</title>
+    <style>
+        /* ... Le même CSS violet magnifique que form-container, header, body, btn, etc. ... */
+        :root {
+            --primary: #6b46c1;
+            --primary-hover: #553c9a;
+            --bg-color: #fcfaff;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --border-color: #e9d8fd;
+            --input-border: #cbd5e0;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        header { background-color: var(--primary); color: white; padding: 1.5rem 2rem; text-align: center; box-shadow: 0 4px 6px rgba(107, 70, 193, 0.2); }
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 2rem; }
+        
+        .form-container { background-color: var(--card-bg); padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(107, 70, 193, 0.1); width: 100%; max-width: 600px; border: 1px solid var(--border-color); }
+        .form-container h2 { margin-top: 0; color: var(--primary); margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; }
+        
+        .form-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+        .form-group { flex: 1; margin-bottom: 1.5rem; }
+        .form-row .form-group { margin-bottom: 0; }
+        
+        label { display: block; font-weight: bold; margin-bottom: 0.5rem; color: var(--text-main); }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 0.75rem; border: 1px solid var(--input-border); border-radius: 6px; font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: border-color 0.2s, box-shadow 0.2s; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.2); }
+        
+        .actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+        .btn { background-color: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: background-color 0.2s; text-decoration: none; }
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn-cancel { background-color: white; color: var(--text-main); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: bold; border: 1px solid var(--input-border); transition: background-color 0.2s; }
+        .btn-cancel:hover { background-color: #f7fafc; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Chez Maymouna</h1>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h2>Ajouter un Nouvel Ingrédient</h2>
+            
+            <form action="/ingredients/create" method="POST">
+                
+                <div class="form-group">
+                    <label for="categoryId">Catégorie *</label>
+                    <select id="categoryId" name="categoryId" required>
+                        <option value="" disabled selected>-- Choisissez une catégorie --</option>
+                        <% categories.forEach(cat => { %>
+                            <option value="<%= cat.id %>" <%= String(cat.id) === String(selectedCategoryId) ? 'selected' : '' %>>
+                                <%= cat.name %>
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Nom de l'ingrédient *</label>
+                    <input type="text" id="name" name="name" required placeholder="ex: Farine de blé T45">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quantity">Quantité en stock *</label>
+                        <input type="number" id="quantity" name="quantity" step="any" min="0" required placeholder="ex: 15">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="unit">Unité *</label>
+                        <select id="unit" name="unit" required>
+                            <option value="kg">Kilogrammes (kg)</option>
+                            <option value="grammes">Grammes (g)</option>
+                            <option value="litres">Litres (L)</option>
+                            <option value="pieces">Pièces / Unités</option>
+                            <option value="boites">Boîtes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Prix unitaire (€) *</label>
+                    <input type="number" id="price" name="price" step="any" min="0" required placeholder="ex: 2.50">
+                </div>
+
+                <div class="actions">
+                    <a href="javascript:history.back()" class="btn-cancel">Annuler</a>
+                    <button type="submit" class="btn">Enregistrer l'ingrédient</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>

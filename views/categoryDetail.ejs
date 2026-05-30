@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        /* ... (Garde exactement le même CSS qu'avant jusqu'à .btn-danger:hover) ... */
+        :root {
+            --primary: #6b46c1;
+            --primary-hover: #553c9a;
+            --bg-color: #fcfaff;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border-color: #e9d8fd;
+            --table-header: #f3ebff;
+            --danger: #e53e3e;
+            --danger-hover: #c53030;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
+        header { background-color: var(--primary); color: white; padding: 1.5rem 2rem; text-align: center; box-shadow: 0 4px 6px rgba(107, 70, 193, 0.2); }
+        main { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        .category-header { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: flex-start; }
+        .category-info h2 { margin: 0 0 0.5rem 0; color: var(--primary); font-size: 2rem; }
+        .category-info p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
+        .category-actions { display: flex; gap: 1rem; }
+        
+        .btn { background-color: var(--primary); color: white; padding: 0.5rem 1rem; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; transition: background-color 0.2s; border: none; cursor: pointer; }
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn-outline { background-color: white; color: var(--primary); border: 1px solid var(--primary); }
+        .btn-outline:hover { background-color: var(--table-header); }
+        .btn-danger { background-color: white; color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger:hover { background-color: var(--danger); color: white; }
+
+        /* NOUVEAU CSS POUR LE TABLEAU */
+        .btn-sm {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .ingredients-section { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .section-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .section-header h3 { margin: 0; color: var(--text-main); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
+        th { background-color: var(--table-header); color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: #fcfaff; }
+        .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--primary); text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Chez Maymouna</h1>
+    </header>
+
+    <main>
+        <a href="/categories" class="back-link">&larr; Retour aux catégories</a>
+
+        <div class="category-header">
+            <div class="category-info">
+                <h2><%= category.name %></h2>
+                <p><%= category.description || "Aucune description fournie." %></p>
+            </div>
+            
+            <div class="category-actions">
+                <a href="/categories/<%= category.id %>/update" class="btn btn-outline">Modifier</a>
+                
+                <form action="/categories/<%= category.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="ingredients-section">
+            <div class="section-header">
+                <h3>Ingrédients en stock</h3>
+                <a href="/ingredients/create?category=<%= category.id %>" class="btn">+ Ajouter un ingrédient</a>
+            </div>
+
+            <% if (ingredients && ingredients.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Quantité</th>
+                            <th>Prix Unitaire</th>
+                            <th>Valeur Totale</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                        let totalCategoryValue = 0;
+                        ingredients.forEach(ingredient => { 
+                            const totalValue = ingredient.quantity_in_stock * ingredient.price_per_unit;
+                            totalCategoryValue += totalValue;
+                        %>
+                            <tr>
+                                <td><strong><%= ingredient.name %></strong></td>
+                                <td><%= ingredient.quantity_in_stock %> <%= ingredient.unit %></td>
+                                <td><%= ingredient.price_per_unit %> €</td>
+                                <td><strong><%= totalValue.toFixed(2) %> €</strong></td>
+                                
+                                <td class="action-buttons">
+                                    <a href="/ingredients/<%= ingredient.id %>/update" class="btn btn-outline btn-sm">Modifier</a>
+                                    
+                                    <form action="/ingredients/<%= ingredient.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cet ingrédient ?');">
+                                        <input type="hidden" name="categoryId" value="<%= category.id %>">
+                                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                    <tfoot>
+                        <tr style="background-color: var(--table-header);">
+                            <td colspan="3" style="text-align: right; font-weight: bold;">Valeur totale du stock de cette catégorie :</td>
+                            <td colspan="2" style="font-weight: bold; color: var(--primary); font-size: 1.1rem;"><%= totalCategoryValue.toFixed(2) %> €</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            <% } else { %>
+                <div class="empty-state">
+                    <p>Aucun ingrédient dans cette catégorie pour le moment.</p>
+                </div>
+            <% } %>
+        </div>
+
+    </main>
+
+</body>
+</html>

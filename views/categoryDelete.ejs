@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        :root {
+            --primary: #6b46c1;
+            --primary-hover: #553c9a;
+            --bg-color: #fcfaff;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --border-color: #e9d8fd;
+            --danger: #e53e3e;
+            --danger-hover: #c53030;
+            --warning-bg: #fffaf0;
+            --warning-border: #ed8936;
+            --error-bg: #fff5f5;
+            --error-border: #fc8181;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(107, 70, 193, 0.2);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .form-container {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.1);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .form-container h2 {
+            margin-top: 0;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+        }
+
+        .alert {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: left;
+            line-height: 1.5;
+            border-left: 5px solid;
+        }
+
+        .alert-error {
+            background-color: var(--error-bg);
+            border-left-color: var(--danger);
+            color: #9b2c2c;
+        }
+
+        .alert-warning {
+            background-color: var(--warning-bg);
+            border-left-color: var(--warning-border);
+            color: #9c4221;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-cancel {
+            background-color: white;
+            color: var(--text-main);
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            border: 1px solid #cbd5e0;
+            transition: background-color 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f7fafc;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Chez Maymouna</h1>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h2>Supprimer la catégorie</h2>
+            
+            <% if (hasIngredients) { %>
+                
+                <div class="alert alert-error">
+                    <strong>Action impossible :</strong> La catégorie <em>"<%= category.name %>"</em> contient encore des ingrédients. 
+                    <br><br>
+                    Pour protéger votre base de données, vous devez d'abord supprimer ou déplacer ces ingrédients avant de pouvoir supprimer cette catégorie.
+                </div>
+                
+                <div class="actions">
+                    <a href="/categories/<%= category.id %>" class="btn">Retour aux détails</a>
+                </div>
+
+            <% } else { %>
+
+                <div class="alert alert-warning">
+                    Êtes-vous sûr de vouloir supprimer définitivement la catégorie <strong>"<%= category.name %>"</strong> ?
+                    <br><br>
+                    Cette action est irréversible.
+                </div>
+                
+                <form action="/categories/<%= category.id %>/delete" method="POST">
+                    <div class="actions">
+                        <a href="/categories/<%= category.id %>" class="btn-cancel">Annuler</a>
+                        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                    </div>
+                </form>
+
+            <% } %>
+
+        </div>
+    </main>
+
+</body>
+</html>
