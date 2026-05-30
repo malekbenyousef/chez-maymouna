@@ -4,59 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <style>
-        /* ... (Garde exactement le même CSS qu'avant jusqu'à .btn-danger:hover) ... */
-        :root {
-            --primary: #6b46c1;
-            --primary-hover: #553c9a;
-            --bg-color: #fcfaff;
-            --card-bg: #ffffff;
-            --text-main: #2d3748;
-            --text-muted: #718096;
-            --border-color: #e9d8fd;
-            --table-header: #f3ebff;
-            --danger: #e53e3e;
-            --danger-hover: #c53030;
-        }
+<style>
+    :root {
+        --primary: #6b46c1;
+        --primary-hover: #553c9a;
+        --bg-color: #fcfaff;
+        --card-bg: #ffffff;
+        --text-main: #2d3748;
+        --text-muted: #718096;
+        --border-color: #e9d8fd;
+        --table-header: #f3ebff;
+        --danger: #e53e3e;
+        --danger-hover: #c53030;
+    }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
-        header { background-color: var(--primary); color: white; padding: 1.5rem 2rem; text-align: center; box-shadow: 0 4px 6px rgba(107, 70, 193, 0.2); }
-        main { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
-        .category-header { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: flex-start; }
-        .category-info h2 { margin: 0 0 0.5rem 0; color: var(--primary); font-size: 2rem; }
-        .category-info p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
-        .category-actions { display: flex; gap: 1rem; }
+    /* === BASE STYLES === */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
+    header { background-color: var(--primary); color: white; padding: 1.5rem 1rem; text-align: center; box-shadow: 0 4px 6px rgba(107, 70, 193, 0.2); }
+    main { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+    
+    .category-header { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
+    .category-info h2 { margin: 0 0 0.5rem 0; color: var(--primary); font-size: 2rem; }
+    .category-info p { color: var(--text-muted); margin: 0; font-size: 1.1rem; line-height: 1.4; }
+    .category-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    
+    .btn { background-color: var(--primary); color: white; padding: 0.5rem 1rem; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; transition: background-color 0.2s; border: none; cursor: pointer; display: inline-block; text-align: center; }
+    .btn:hover { background-color: var(--primary-hover); }
+    .btn-outline { background-color: white; color: var(--primary); border: 1px solid var(--primary); }
+    .btn-outline:hover { background-color: var(--table-header); }
+    .btn-danger { background-color: white; color: var(--danger); border: 1px solid var(--danger); }
+    .btn-danger:hover { background-color: var(--danger); color: white; }
+
+    /* === TABLE BASE STYLES (Desktop) === */
+    .ingredients-section { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .section-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .section-header h3 { margin: 0; color: var(--text-main); }
+    
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
+    th { background-color: var(--table-header); color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background-color: #fcfaff; }
+    
+    .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+    .action-buttons { display: flex; gap: 0.5rem; align-items: center; }
+    .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); }
+    .back-link { display: inline-block; margin-bottom: 1rem; color: var(--primary); text-decoration: none; font-weight: bold; }
+    .back-link:hover { text-decoration: underline; }
+
+    /* === DIALOG MODAL === */
+    dialog { border: none; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); padding: 2rem; max-width: 90%; width: 400px; text-align: center; background-color: var(--card-bg); color: var(--text-main); }
+    dialog::backdrop { background: rgba(45, 55, 72, 0.6); backdrop-filter: blur(3px); }
+    dialog h3 { color: var(--danger); margin-top: 0; }
+    .dialog-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+    
+    /* Bouton annuler de la modale */
+    .btn-cancel { background-color: white; color: var(--text-main); padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: bold; border: 1px solid #cbd5e0; transition: background-color 0.2s; cursor: pointer; }
+    .btn-cancel:hover { background-color: #f7fafc; }
+
+    /* === RESPONSIVE MEDIA QUERIES (Mobile) === */
+    @media screen and (max-width: 768px) {
+        /* Ajustements généraux */
+        main { margin: 1rem auto; }
+        .category-header { padding: 1.5rem; flex-direction: column; }
+        .category-actions { width: 100%; justify-content: stretch; }
+        .category-actions .btn { flex: 1; }
+        .section-header { flex-direction: column; align-items: flex-start; }
+        .section-header .btn { width: 100%; box-sizing: border-box; }
+
+        /* Transformation magique du tableau en cartes */
+        table, thead, tbody, th, td, tr { 
+            display: block; 
+        }
         
-        .btn { background-color: var(--primary); color: white; padding: 0.5rem 1rem; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; transition: background-color 0.2s; border: none; cursor: pointer; }
-        .btn:hover { background-color: var(--primary-hover); }
-        .btn-outline { background-color: white; color: var(--primary); border: 1px solid var(--primary); }
-        .btn-outline:hover { background-color: var(--table-header); }
-        .btn-danger { background-color: white; color: var(--danger); border: 1px solid var(--danger); }
-        .btn-danger:hover { background-color: var(--danger); color: white; }
-
-        /* NOUVEAU CSS POUR LE TABLEAU */
-        .btn-sm {
-            padding: 0.3rem 0.6rem;
-            font-size: 0.8rem;
+        /* Cacher l'en-tête du tableau visuellement, mais le garder pour l'accessibilité */
+        thead tr { 
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
         }
-        .action-buttons {
+        
+        tr { 
+            border-bottom: 3px solid var(--border-color);
+            padding: 0.5rem 0;
+            background-color: var(--card-bg) !important;
+        }
+        
+        td { 
+            /* Se comporte comme une ligne */
+            border: none;
+            border-bottom: 1px solid #edf2f7; 
+            position: relative;
+            padding-left: 50%; /* Laisse de la place pour le label */
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            text-align: right; /* Aligne la valeur à droite */
             display: flex;
-            gap: 0.5rem;
+            justify-content: flex-end;
             align-items: center;
         }
 
-        .ingredients-section { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .section-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .section-header h3 { margin: 0; color: var(--text-main); }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
-        th { background-color: var(--table-header); color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover { background-color: #fcfaff; }
-        .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); }
-        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--primary); text-decoration: none; font-weight: bold; }
-        .back-link:hover { text-decoration: underline; }
-    </style>
+        td:last-child {
+            border-bottom: 0;
+        }
+        
+        
+        tbody td::before { 
+            position: absolute;
+            top: 50%;
+            left: 1.5rem;
+            transform: translateY(-50%);
+            width: 45%; 
+            padding-right: 10px; 
+            white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        
+        tbody td:nth-of-type(1)::before { content: "Nom"; }
+        tbody td:nth-of-type(2)::before { content: "Quantité"; }
+        tbody td:nth-of-type(3)::before { content: "Prix Unitaire"; }
+        tbody td:nth-of-type(4)::before { content: "Valeur Totale"; }
+        tbody td:nth-of-type(5)::before { content: "Actions"; top: 1.5rem; transform: none;}
+
+        td.action-buttons {
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        td.action-buttons form { width: 100%; text-align: right; }
+        
+        /* 2. Le vrai correctif pour le pied de page (Footer) */
+        tfoot tr {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            background-color: var(--table-header) !important;
+            border-radius: 0 0 12px 12px; /* Garde les coins arrondis en bas */
+            border-top: 2px solid var(--primary);
+        }
+
+        tfoot td {
+            /* On annule le comportement de base des td sur mobile */
+            display: block;
+            width: 100%;
+            padding: 0 !important;
+            text-align: center !important;
+            border: none !important;
+        }
+
+        tfoot td::before {
+            content: none !important; /* Sécurité absolue : aucun label ici */
+        }
+
+        /* Style spécifique pour le texte "Valeur totale..." */
+        tfoot td[colspan="3"] {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        tfoot td[colspan="2"] {
+            font-size: 2rem !important;
+            color: var(--primary) !important;
+        }
+        
+    }
+</style>
+
 </head>
 <body>
 
@@ -76,9 +197,7 @@
             <div class="category-actions">
                 <a href="/categories/<%= category.id %>/update" class="btn btn-outline">Modifier</a>
                 
-                <form action="/categories/<%= category.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                </form>
+                <button type="button" class="btn btn-danger" onclick="openModal('/categories/<%= category.id %>/delete', 'Voulez-vous vraiment supprimer la catégorie <%= category.name %> ?')">Supprimer la catégorie</button>
             </div>
         </div>
 
@@ -109,16 +228,13 @@
                             <tr>
                                 <td><strong><%= ingredient.name %></strong></td>
                                 <td><%= ingredient.quantity_in_stock %> <%= ingredient.unit %></td>
-                                <td><%= ingredient.price_per_unit %> €</td>
-                                <td><strong><%= totalValue.toFixed(2) %> €</strong></td>
+                                <td><%= ingredient.price_per_unit %> dt</td>
+                                <td><strong><%= totalValue.toFixed(2) %> dt</strong></td>
                                 
                                 <td class="action-buttons">
                                     <a href="/ingredients/<%= ingredient.id %>/update" class="btn btn-outline btn-sm">Modifier</a>
                                     
-                                    <form action="/ingredients/<%= ingredient.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Voulez-vous vraiment supprimer cet ingrédient ?');">
-                                        <input type="hidden" name="categoryId" value="<%= category.id %>">
-                                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                                    </form>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="openModal('/ingredients/<%= ingredient.id %>/delete', 'Voulez-vous vraiment supprimer <%= ingredient.name %> ?')">Supprimer</button>
                                 </td>
                             </tr>
                         <% }) %>
@@ -126,7 +242,7 @@
                     <tfoot>
                         <tr style="background-color: var(--table-header);">
                             <td colspan="3" style="text-align: right; font-weight: bold;">Valeur totale du stock de cette catégorie :</td>
-                            <td colspan="2" style="font-weight: bold; color: var(--primary); font-size: 1.1rem;"><%= totalCategoryValue.toFixed(2) %> €</td>
+                            <td colspan="2" style="font-weight: bold; color: var(--primary); font-size: 1.1rem;"><%= totalCategoryValue.toFixed(2) %> dt</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -138,6 +254,37 @@
         </div>
 
     </main>
+<dialog id="deleteModal">
+        <h3>Confirmation</h3>
+        <p id="modalMessage">Êtes-vous sûr ?</p>
+        
+        <form id="modalForm" method="POST" action="">
+            <input type="hidden" name="categoryId" value="<%= category.id %>">
+            
+            <div class="dialog-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Annuler</button>
+                <button type="submit" class="btn btn-danger">Confirmer</button>
+            </div>
+        </form>
+    </dialog>
 
+    <script>
+        const modal = document.getElementById('deleteModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalForm = document.getElementById('modalForm');
+
+        function openModal(actionUrl, message) {
+            // 1. On change le texte de la question
+            modalMessage.textContent = message;
+            // 2. On indique au formulaire à quelle URL il doit envoyer la requête POST
+            modalForm.action = actionUrl;
+            // 3. On affiche la modale avec son bel arrière-plan
+            modal.showModal();
+        }
+
+        function closeModal() {
+            modal.close();
+        }
+    </script>
 </body>
 </html>

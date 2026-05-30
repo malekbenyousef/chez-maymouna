@@ -110,7 +110,10 @@ async function categoryDeletePost(req, res) {
         const ingredients = await db.getIngredientsByCategory(id);
         
         if (ingredients.length > 0) {
-            return res.status(400).send("Action refusée : Cette catégorie contient encore des ingrédients.");
+            return res.status(400).render("errorRedirect", {
+                title: "Action Refusée",
+                categoryId: id
+            });
         }
 
         await db.deleteCategory(id);

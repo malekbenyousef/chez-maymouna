@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Chez Maymouna</title>
+    <style>
+        :root {
+            --primary: #6b46c1;
+            --bg-color: #fcfaff;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --danger: #e53e3e;
+            --error-bg: #fff5f5;
+            --border-color: #e9d8fd;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        .message-box { background-color: var(--card-bg); padding: 3rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(107, 70, 193, 0.15); text-align: center; max-width: 500px; border: 1px solid var(--border-color); border-top: 5px solid var(--danger); }
+        .message-box h2 { color: var(--danger); margin-top: 0; }
+        
+        .countdown { font-size: 3rem; font-weight: bold; color: var(--primary); margin: 1.5rem 0; }
+        
+        .btn { display: inline-block; background-color: var(--primary); color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="message-box">
+        <h2>Action Refusée</h2>
+        <p>Cette catégorie contient encore des ingrédients. Veuillez d'abord les supprimer ou les déplacer.</p>
+        
+        <p>Retour automatique dans :</p>
+        <div class="countdown" id="timer">5</div>
+        
+        <a href="/categories/<%= categoryId %>" class="btn">Retourner maintenant</a>
+    </div>
+
+    <script>
+        let timeLeft = 5;
+        const timerElement = document.getElementById('timer');
+        
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                // Redirection en JavaScript
+                window.location.href = '/categories/<%= categoryId %>';
+            }
+        }, 1000);
+    </script>
+
+</body>
+</html>

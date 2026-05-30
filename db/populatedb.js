@@ -19,23 +19,23 @@ CREATE TABLE ingredients (
 );
 
 INSERT INTO categories (name, description) VALUES
-  ('Dairy & Refrigerated', 'Items that must be kept in the walk-in fridge'),
-  ('Dry Goods & Baking', 'Flours, sugars, and leavening agents stored in the pantry'),
-  ('Fresh Produce', 'Fruits, herbs, and perishable toppings'),
-  ('Packaging', 'Boxes, bags, ribbons, and display materials');
+  ('Produits Laitiers & Frais', 'Articles devant être conservés au réfrigérateur'),
+  ('Produits Secs & Pâtisserie', 'Farines, sucres et poudres levantes stockés dans le garde-manger'),
+  ('Produits Frais', 'Fruits, herbes et garnitures périssables'),
+  ('Emballages', 'Boîtes, sacs, rubans et matériels de présentation');
 
 INSERT INTO ingredients (category_id, name, quantity_in_stock, unit, price_per_unit) VALUES
-  (1, 'Unsalted Butter', 15.00, 'kg', 6.50),
-  (1, 'Heavy Cream', 10.00, 'liters', 4.20),
-  (2, 'Cake Flour', 50.00, 'kg', 1.80),
-  (2, 'Granulated Sugar', 50.00, 'kg', 1.20),
-  (2, 'Vanilla Bean Paste', 2.50, 'liters', 45.00),
-  (3, 'Fresh Lemons', 30.00, 'pieces', 0.50),
-  (4, '10x10 Cake Boxes', 100.00, 'boxes', 0.80);
+  (1, 'Beurre Doux', 15.00, 'kg', 6.50),
+  (1, 'Crème Liquide Entière', 10.00, 'litres', 4.20),
+  (2, 'Farine T45', 50.00, 'kg', 1.80),
+  (2, 'Sucre en Poudre', 50.00, 'kg', 1.20),
+  (2, 'Pâte de Vanille', 2.50, 'litres', 45.00),
+  (3, 'Citrons Frais', 30.00, 'pieces', 0.50),
+  (4, 'Boîtes à Gâteaux 25x25cm', 100.00, 'boites', 0.80);
 `;
 
 async function main() {
-  console.log("Seeding pastry shop database...");
+  console.log("Peuplement de la base de données de la pâtisserie...");
   
   const client = new Client({
     connectionString: process.argv[2],
@@ -44,12 +44,12 @@ async function main() {
   try {
     await client.connect();
     await client.query(SQL);
-    console.log("Database seeded successfully!");
+    console.log("Base de données peuplée avec succès !");
   } catch (err) {
-    console.error("Error seeding database:", err);
+    console.error("Erreur lors du peuplement de la base de données :", err);
   } finally {
     await client.end();
-    console.log("Done.");
+    console.log("Terminé.");
   }
 }
 
